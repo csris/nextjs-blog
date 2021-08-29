@@ -7,7 +7,12 @@ import Link from 'next/link'
 const name = 'Charles Srisuwananukorn'
 export const siteTitle = 'Next.js Sample Website'
 
-export default function Layout({ children, home }) {
+type Props = {
+  children: React.ReactNode;
+  home?: boolean;
+};
+
+const Layout = ({ children, home }: Props) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -71,3 +76,5 @@ export default function Layout({ children, home }) {
     </div>
   )
 }
+
+export default Layout;

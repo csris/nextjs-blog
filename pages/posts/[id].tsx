@@ -2,10 +2,20 @@ import Date from '../../components/date'
 import Head from 'next/head'
 import Layout from '../../components/layout'
 import utilStyles from '../../styles/utils.module.css'
-import { getAllPostIds, getPostData } from '../../lib/posts'
+import { ParsedUrlQuery } from 'querystring'
+import { GetStaticProps, GetStaticPaths } from 'next'
+import { getAllPostIds, getPostData, PostData } from '../../lib/posts'
 
 
-export default function Post({ postData }) {
+type Props = {
+  postData: PostData;
+}
+
+interface Params extends ParsedUrlQuery {
+  id: string,
+}
+
+const Post = ({ postData }: Props) => {
   return (
     <Layout>
       <Head>
@@ -22,7 +32,7 @@ export default function Post({ postData }) {
   )
 }
 
-export async function getStaticPaths() {
+export const getStaticPaths = async () => {
   const paths = getAllPostIds();
   return {
     paths,
@@ -30,7 +40,11 @@ export async function getStaticPaths() {
   }
 }
 
-export async function getStaticProps({ params }) {
+export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
+  if (params === undefined) {
+    throw new Error("params is undefined")
+  }
+
   const postData = await getPostData(params.id)
   return {
     props: {
@@ -38,3 +52,5 @@ export async function getStaticProps({ params }) {
     }
   }
 }
+
+export default Post;
